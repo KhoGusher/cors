@@ -14,22 +14,20 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      businessUnits: []
-    };
-  },
-  async mounted() {
-    try {
-      const response = await fetch('http://ec2-13-244-184-193.af-south-1.compute.amazonaws.com/api/app-api/business-units');
-      const data = await response.json();
-      this.businessUnits = data;
-      console.log(data);
-    } catch (error) {
-      console.error('Error fetching business units:', error);
-    }
+<script setup>
+import { useRuntimeConfig } from '#app';
+
+const config = useRuntimeConfig();
+const businessUnits = ref([]);
+
+onMounted(async () => {
+  try {
+    console.log('BASE_URL:', config.public.baseURL);
+    const response = await fetch(`${config.public.baseURL}/business-units`);
+    const data = await response.json();
+    businessUnits.value = data;
+  } catch (error) {
+    console.error('Error fetching business units:', error);
   }
-};
+});
 </script>
